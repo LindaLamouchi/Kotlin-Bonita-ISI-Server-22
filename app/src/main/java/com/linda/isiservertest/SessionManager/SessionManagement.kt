@@ -7,6 +7,7 @@ class SessionManagement (context:Context){
     val PREFERENCE_NAME="Shared_Pref_Data"
     val PREFERENCE_SESSION="Session"
     val PREFERENCE_LOGIN="Token"
+    val PREFERENCE_USERID="User"
 
     val preferences=context.getSharedPreferences(PREFERENCE_NAME,Context.MODE_PRIVATE)
     fun  getLogin(): String? {
@@ -25,5 +26,14 @@ class SessionManagement (context:Context){
         editor.putString(PREFERENCE_SESSION,sessionIid)
         editor.apply()
     }
+    fun getUserID():String?{
+        return preferences.getString(PREFERENCE_USERID," ")
+    }
+    fun setUserID(UserId:String){
+        val editor=preferences.edit()
+        editor.putString(PREFERENCE_USERID,UserId)
+        editor.apply()
+    }
+
 
 }

@@ -1,22 +1,35 @@
 package com.linda.isiservertest
+import android.util.Log
+import android.view.View
+import android.widget.Button
+import android.widget.CheckBox
+import android.widget.EditText
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.linda.isiservertest.model.ProcessBonita
-import com.linda.isiservertest.model.User
+import com.linda.isiservertest.api.RetrofitInstance
+import com.linda.isiservertest.model.*
 import com.linda.isiservertest.repository.Repository
+import kotlinx.android.synthetic.main.activity_process.view.*
 
 import kotlinx.coroutines.launch
+import okhttp3.MediaType
+import okhttp3.MediaType.Companion.toMediaTypeOrNull
+import okhttp3.RequestBody
+import okhttp3.ResponseBody
+import org.json.JSONObject
+import retrofit2.HttpException
 import retrofit2.Response
 class MainViewModel(private val repository: Repository): ViewModel() {
 
     var myResponse: MutableLiveData<Response<User>> = MutableLiveData()
-    var myResponse2: MutableLiveData<Response<User>> = MutableLiveData()
-    var myCustomPosts: MutableLiveData<Response<List<User>>> = MutableLiveData()
+    var UserCred: MutableLiveData<Response<UserCredentials>> = MutableLiveData()
+    var CategoryList: MutableLiveData<Response<List<Category>>> = MutableLiveData()
 
 
     var myCustomPosts2: MutableLiveData<Response<List<ProcessBonita>>> = MutableLiveData()
-
+    var contractsBonita: MutableLiveData<Response<Contract>> = MutableLiveData()
+    var statusSubmit:MutableLiveData<Response<ResponseBody>> = MutableLiveData()
 
     fun pushPost2(username:String,password : String) {
         viewModelScope.launch {
@@ -64,16 +77,76 @@ class MainViewModel(private val repository: Repository): ViewModel() {
         }
     }*/
 
-    fun getCustomProcess(
-    map:String
-    //map: Map<String,String>
-    ){
+    fun getUserCredential(Cookie: String){
+        viewModelScope.launch {
+            val response=repository.getUserCredentials(Cookie)
+            UserCred.value = response
+        }
+    }
+    fun getContracts(Cookie : String , processId : String) {
+        viewModelScope.launch {
+
+            val response = repository.getProcessDetails(Cookie, processId)
+            contractsBonita.value = response
+
+        }
+
+    }
+    fun getCategoryList(Cookie:String,p:Int){
+        viewModelScope.launch {
+
+            val response = repository.getCategorylist(Cookie, p)
+            CategoryList.value = response
+
+        }
+    }
+
+    fun getCustomProcess(map:String,UserId:String,CategoryId:String){
 
         viewModelScope.launch {
-            val response = repository.getCustomProcess(map)
-           System.out.println("this is the Model page :  Saved sessionId and Cookie in shared preferences: "+map)
-
+            val response = repository.getCustomProcess(map,0,100, "user_id=$UserId","categoryId=$CategoryId")
             myCustomPosts2.value = response
         }
     }
+     fun submitForm(userCookie : String,processId: String,bonitaToken : String,contractName : String,v :View) {
+         viewModelScope.launch {
+             var wholeObj = JSONObject()
+             var data = JSONObject()
+             var count = v.editTextLinearLayout.childCount
+
+             for (i in 0 until count - 1) {
+                 var view: View = v.editTextLinearLayout.getChildAt(i)
+                 if ((view is EditText)) {
+                     data.put(view.hint.toString(), view.text.toString())
+                     Log.d("elements", view.text.toString() + " " + view.hint.toString())
+
+                 } else if (view is Button && view.id === 456) {
+                     data.put(view.tag.toString(), view.hint.toString())
+                     Log.d("date", view.hint.toString() + " " + view.tag.toString())
+
+                 } else if (view is CheckBox && view.id === 123) {
+                     data.put(view.text.toString(), view.isEnabled.toString())
+                     Log.d("checkbox", view.isEnabled.toString() + " " + view.text)
+
+                 }
+
+             }
+             wholeObj.put(contractName, data)
+             val obj = wholeObj.toString()
+             val requestBody: RequestBody =
+                 RequestBody.create("application/json".toMediaTypeOrNull(), obj)
+
+
+             var response = repository.submitb( bonitaToken,userCookie, processId, requestBody)
+
+             Log.d("viewmodel", obj)
+             statusSubmit.postValue(response)
+         }
+
+
+
+
+    }
+
+
 }

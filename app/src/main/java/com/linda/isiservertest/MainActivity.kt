@@ -14,6 +14,7 @@ import android.widget.Toast
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import com.linda.isiservertest.SessionManager.SessionManagement
+import com.linda.isiservertest.adapter.MyAdapter
 import com.linda.isiservertest.model.User
 import com.linda.isiservertest.repository.Repository
 import okhttp3.*
@@ -35,7 +36,7 @@ class MainActivity : AppCompatActivity() {
         val username=findViewById<EditText>(R.id.username)
         val pass=findViewById<EditText>(R.id.password)
 
-       var cook:String
+       var token:String
        var sessin:String
 
 
@@ -62,20 +63,37 @@ class MainActivity : AppCompatActivity() {
                         val s=response.headers().toString()
 
                         System.out.println("this is s:"+s);
-                        cook=extractInfoCookie(s)
-                        System.out.println("Extracted cookie :$cook");
+                        token=extractInfoCookie(s)
+                        System.out.println("Extracted Token :$token");
                         sessin=extractInfoSessionId(s)
                         System.out.println("Extracted SessionId :$sessin");
 
 
                         val mypreference=SessionManagement(this)
-                        mypreference.setLogin(cook)
-                        mypreference.setSessionID(sessin)
-                        System.out.println("In login Interface : Saved sessionId and Cookie in shared preferences:"+mypreference.getSession()+" "+mypreference.getLogin());
+                        mypreference.setLogin(token) //saving the token
+                        mypreference.setSessionID(sessin) //saving the session Id
 
+                        val cooo="JSESSIONID=$sessin;X-Bonita-API-Token=$token; bonita.tenant=1; BOS_Locale=en"
+
+                        System.out.println("In login Interface : user Id:"+cooo);
+                        viewModel.getUserCredential(cooo)
+                        viewModel.UserCred.observe(this, Observer { response ->
+
+                            if(response.isSuccessful){
+                                Log.d("UserID : ",response.body()!!.user_id)
+                                val userId=response.body()!!.user_id.toString()
+                                mypreference.setUserID(userId) //saving user id
+                            }
+                                else{
+                                    Toast.makeText(this,"Not able to get user ID",Toast.LENGTH_SHORT).show()
+                            }
+
+                        })
+                        System.out.println("In login Interface : Saved sessionId and Cookie in shared preferences:"+mypreference.getSession()+" "+mypreference.getLogin());
+                        System.out.println("Saved User Id in shared preference :"+mypreference.getUserID())
 
                         show(this,"loading..","wait while loading") //Display a spinner
-                        startActivity(Intent(this, HomeActivity::class.java))
+                        startActivity(Intent(this, CategoryActivity::class.java))
 
 
                     }else {

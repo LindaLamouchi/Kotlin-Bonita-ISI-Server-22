@@ -11,8 +11,9 @@ class MyInterceptor:Interceptor {
 
         val request :Request=chain.request()
                 .newBuilder()
-                .addHeader("Content-Type", "application/x-www-form-urlencoded")
+            .addHeader("Content-Type", "application/json")
                 .build()
+        //.addHeader("Content-Type", "application/x-www-form-urlencoded")
         return chain.proceed(request)
     }
 }
