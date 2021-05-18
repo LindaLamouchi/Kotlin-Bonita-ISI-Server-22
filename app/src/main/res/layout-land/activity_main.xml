@@ -22,9 +22,10 @@
         android:id="@+id/username"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="28dp"
+        android:layout_marginTop="16dp"
         android:ems="10"
         android:hint="username..."
+        android:importantForAutofill="no"
         android:inputType="textPersonName"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.498"
@@ -65,7 +66,8 @@
         app:layout_constraintEnd_toEndOf="@+id/username"
         app:layout_constraintTop_toTopOf="@+id/username"
         app:srcCompat="@drawable/ic_baseline_account_circle_24"
-        tools:ignore="MissingConstraints" />
+        tools:ignore="MissingConstraints"
+        android:contentDescription="TODO" />
 
     <ImageView
         android:id="@+id/imageView2"
@@ -75,7 +77,8 @@
         app:layout_constraintEnd_toEndOf="@+id/password"
         app:layout_constraintTop_toTopOf="@+id/password"
         app:srcCompat="@drawable/ic_baseline_enhanced_encryption_24"
-        tools:ignore="MissingConstraints" />
+        tools:ignore="MissingConstraints"
+        android:contentDescription="TODO" />
 
     <ImageView
         android:id="@+id/imageView4"
@@ -86,6 +89,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.1"
-        app:srcCompat="@drawable/inst" />
+        app:srcCompat="@drawable/inst"
+        android:contentDescription="TODO" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
