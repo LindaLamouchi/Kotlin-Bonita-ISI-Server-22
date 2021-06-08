@@ -12,7 +12,10 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.IsiServerTest"
         android:usesCleartextTraffic="true">
-        <activity android:name=".CategoryActivity"></activity>
+        <activity android:name=".ProfileEActivity"></activity>
+        <activity android:name=".InfoActivity" />
+        <activity android:name=".Dashboard" />
+        <activity android:name=".CategoryActivity" />
         <activity android:name=".ProcessInstanceBonita" />
         <activity android:name=".HomeActivity" />
         <activity android:name=".MainActivity">

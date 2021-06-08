@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+
+    <item
+        android:id="@+id/nav_categories"
+        android:icon="@drawable/category_icone"
+        android:title="Categories" />
+
+
+    <item
+        android:id="@+id/nav_requests"
+        android:icon="@drawable/dashboard_icone"
+        android:title="Dashboard" />
+
+    <item
+        android:id="@+id/Profile"
+        android:icon="@drawable/profile_icone"
+        android:title="Profile" />
+    <item
+        android:id="@+id/Info"
+        android:icon="@drawable/info_icone"
+        android:title="Info" />
+</menu>

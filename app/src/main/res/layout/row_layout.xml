@@ -7,6 +7,7 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:background="#05FF8F00"
         android:padding="8dp">
 
         <TextView
@@ -14,8 +15,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentTop="true"
-            android:layout_marginStart="153dp"
             android:layout_alignParentRight="true"
+            android:layout_marginStart="153dp"
             android:layout_marginTop="20dp"
             android:hint="@string/version"
             android:textColor="#1565C0" />
@@ -24,11 +25,11 @@
             android:id="@+id/nameProcess"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_below="@+id/version"
             android:layout_marginStart="16dp"
             android:layout_marginTop="15dp"
-            android:layout_below="@+id/version"
             android:hint="@string/process"
-            android:textColor="#FFBC14"
+            android:textColor="@color/yellow"
             android:textSize="40dp" />
 
 
@@ -41,7 +42,6 @@
             android:layout_marginTop="36dp"
             android:hint="@string/last_update"
             android:textSize="8dp" />
-
 
 
         <TextView

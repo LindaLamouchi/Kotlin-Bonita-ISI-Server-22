@@ -61,6 +61,9 @@ dependencies {
     implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:2.2.0"
     compileOnly 'com.google.android.wearable:wearable:2.6.0'
 
+    //Rounded img view
+    implementation 'com.makeramen:roundedimageview:2.3.0'
+
     implementation 'androidx.cardview:cardview:1.0.0'
     implementation 'androidx.gridlayout:gridlayout:1.0.0'
     implementation "androidx.cardview:cardview:1.0.0"

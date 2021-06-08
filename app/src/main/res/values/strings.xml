@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">IsiServer22</string>
+    <string name="app_name">IsiServer_2022</string>
     <string name="title_activity_home">Home</string>
     <!--
     This string is used for square devices and overridden by hello_world in
@@ -10,4 +10,5 @@
     <string name="last_update">last update</string>
     <string name="version">version</string>
     <string name="processname">ProcessName</string>
+    <string name="linkisi">Official WebSite : <u>http://www.isi.rnu.tn/</u></string>
 </resources>

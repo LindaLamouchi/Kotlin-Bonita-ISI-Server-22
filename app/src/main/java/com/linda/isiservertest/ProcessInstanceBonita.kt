@@ -4,6 +4,7 @@ package com.linda.isiservertest
 import android.app.DatePickerDialog
 import android.app.TimePickerDialog
 import android.content.Context
+import android.content.Intent
 import android.graphics.Color
 import android.os.Bundle
 import android.os.StrictMode
@@ -14,6 +15,7 @@ import android.widget.LinearLayout
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
+import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.linda.isiservertest.databinding.ActivityProcessBinding
 import com.linda.isiservertest.model.Contract
 import com.linda.isiservertest.repository.Repository
@@ -30,10 +32,16 @@ class ProcessInstanceBonita : AppCompatActivity() {
     lateinit var sessionId: String
     lateinit var token: String
     lateinit var listC: String
+    lateinit var btn: Button
+    lateinit var btn2: Button
+    var flag : Boolean = false
+        get() = field
+        set(value) {
+            field = value
+        }
 
 
     var form_items: ArrayList<JSONObject>? = null
-
 
     override fun onCreate(savedInstanceState: Bundle?) {
 
@@ -72,7 +80,8 @@ class ProcessInstanceBonita : AppCompatActivity() {
         val cookie: String
         if (sessionId != null) {
 
-            cookie ="JSESSIONID=$sessionId;X-Bonita-API-Token=$token; bonita.tenant=1; BOS_Locale=en"
+            cookie =
+                "JSESSIONID=$sessionId;X-Bonita-API-Token=$token; bonita.tenant=1; BOS_Locale=en"
             if (id != null) {
                 viewModel.getContracts(cookie, id)
                 viewModel.contractsBonita.observe(this, Observer { response ->
@@ -87,36 +96,57 @@ class ProcessInstanceBonita : AppCompatActivity() {
                             // my personalized view ;
                             var formC = it
                             newForm(formC, name)
-                            // a submit Btn
-                            var btn = Button(binding!!.root.context)
-                            btn.text = "Submit"
-                            btn.setTextColor(Color.WHITE)
-                            btn.setBackgroundResource(R.drawable.button_shape2)
-                            binding!!.editTextLinearLayout.addView(btn)
-                            //calling the api
-                            btn.setOnClickListener{
+                            // Buttons configuration
+                            setBtn()
 
-                                viewModel.submitForm(cookie,id!!,token,formC.inputs[0].name,binding!!.rootLayout)
-                                Log.d("token",token)
-                                viewModel.statusSubmit.observe(this@ProcessInstanceBonita, Observer { response ->
-                                    Log.d("fail", response.toString())
-                                    if(response.isSuccessful){
-                                        Log.d("submissionForm", response.body().toString())
-                                        Log.d("code", response.code().toString())
-                                        Toast.makeText(this, "Form Submited", Toast.LENGTH_SHORT).show()
-                                    }else{
-                                        Log.d("fail", response.body().toString())
+                            //Saving form
+                            btn.setOnClickListener {
+
+                                viewModel.submitForm(
+                                    cookie,
+                                    id!!,
+                                    token,
+                                    formC.inputs[0].name,
+                                    binding!!.rootLayout
+                                )
+                                flag = true
+                                Log.d("token", token)
+                                viewModel.statusSubmit.observe(
+                                    this@ProcessInstanceBonita,
+                                    Observer { response ->
                                         Log.d("fail", response.toString())
-                                    }
+                                        val intent = Intent(this, CategoryActivity::class.java)
+
+                                        if (response.isSuccessful) {
+                                            Log.d("submissionForm", response.body().toString())
+                                            Log.d("code", response.code().toString())
+                                            Toast.makeText(
+                                                this,
+                                                "Form Submited",
+                                                Toast.LENGTH_SHORT
+                                            ).show()
+                                            startActivity(intent)
+                                        } else {
+                                            Log.d("fail", response.body().toString())
+                                            Log.d("fail", response.toString())
+                                            Toast.makeText(
+                                                this,
+                                                "An error has occured! ",
+                                                Toast.LENGTH_SHORT
+                                            ).show()
+                                        }
 
 
-
-                                })
+                                    })
 
 
                             }
 
-
+                            //Cancel operation
+                            btn2.setOnClickListener {
+                                val intent = Intent(this, CategoryActivity::class.java)
+                                startActivity(intent)
+                            }
 
 
                         }
@@ -294,4 +324,21 @@ class ProcessInstanceBonita : AppCompatActivity() {
 
 
     }
+
+    private fun setBtn() {
+        //setting Save Btn
+        btn = Button(binding!!.root.context)
+        btn.text = "Submit"
+        btn.setTextColor(Color.WHITE)
+        btn.setBackgroundResource(R.drawable.button_shape2)
+        binding!!.editTextLinearLayout.addView(btn)
+        //setting cancel Btn
+        btn2 = Button(binding!!.root.context)
+        btn2.text = "Cancel"
+        btn2.setTextColor(Color.WHITE)
+        btn2.setBackgroundResource(R.drawable.button_shape2)
+        binding!!.editTextLinearLayout.addView(btn2)
+    }
+
+
 }
